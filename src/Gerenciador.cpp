@@ -1,24 +1,21 @@
 #include "Gerenciador.h"
 #include <fstream>
 
-
 void Gerenciador::comandos(Grafo* grafo) {
     bool running = true;
-    cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
-    cout<<"(a) Fecho transitivo direto de um no;"<<endl;
-    cout<<"(b) Fecho transitivo indireto de um no;"<<endl;
-    cout<<"(c) Caminho minimo (Djikstra);"<<endl;
-    cout<<"(d) Caminho minimo (Floyd);"<<endl;
-    cout<<"(e) Arvore Geradora Minima (Algoritmo de Prim);"<<endl;
-    cout<<"(f) Arvore Geradora Minima (Algoritmo de Kruskal);"<<endl;
-    cout<<"(g) Arvore de caminhamento em profundidade;"<<endl;
-    cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
-    cout<<"(0) Sair;"<<endl<<endl;
-
-    char resp;
-    cin >> resp;
     while (running){
-    
+        cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
+        cout<<"(a) Fecho transitivo direto de um no;"<<endl;
+        cout<<"(b) Fecho transitivo indireto de um no;"<<endl;
+        cout<<"(c) Caminho minimo (Djikstra);"<<endl;
+        cout<<"(d) Caminho minimo (Floyd);"<<endl;
+        cout<<"(e) Arvore Geradora Minima (Algoritmo de Prim);"<<endl;
+        cout<<"(f) Arvore Geradora Minima (Algoritmo de Kruskal);"<<endl;
+        cout<<"(g) Arvore de caminhamento em profundidade;"<<endl;
+        cout<<"(h) Raio, diametro, centro e periferia do grafo;"<<endl;
+        cout<<"(0) Sair;"<<endl<<endl;
+        char resp;
+        cin >> resp;
        switch (resp) {
             case 'a': {
 
@@ -37,7 +34,6 @@ void Gerenciador::comandos(Grafo* grafo) {
                     imprimeVetorNoArquivo("fecho_trans_dir.txt", fecho_transitivo_direto);
                     cout<<endl<<endl;
                 }
-
                 break;
             }
 
@@ -62,7 +58,7 @@ void Gerenciador::comandos(Grafo* grafo) {
             }
 
             case 'c': {
-            
+
                 char id_no_1 = get_id_entrada();
                 char id_no_2 = get_id_entrada();
                 vector<char> caminho_minimo_dijkstra = grafo->caminho_minimo_dijkstra(id_no_1,id_no_2);
@@ -74,17 +70,17 @@ void Gerenciador::comandos(Grafo* grafo) {
                         cout << ", ";
                 }
                 cout<<"}"<<endl<<endl;
-            
+
                 if(pergunta_imprimir_arquivo("caminho_minimo_dijkstra.txt")) {
                     imprimeVetorNoArquivo("caminho_minimo_dijkstra.txt", caminho_minimo_dijkstra);
                 }
-            
-            
+
+
                 break;
             }
-        
+
             case 'd': {
-            
+
                 char id_no_1 = get_id_entrada();
                 char id_no_2 = get_id_entrada();
                 vector<char> caminho_minimo_floyd = grafo->caminho_minimo_floyd(id_no_1,id_no_2);
@@ -96,24 +92,24 @@ void Gerenciador::comandos(Grafo* grafo) {
                         cout << ", ";
                 }
                 cout<<"}"<<endl<<endl;
-            
+
                 if(pergunta_imprimir_arquivo("caminho_minimo_floyd.txt")) {
                     imprimeVetorNoArquivo("caminho_minimo_floyd.txt", caminho_minimo_floyd);
                 }
-            
-            
+
+
                 break;
             }
             case 'e': {
-            
+
                 int tam;
                 cout<<"Digite o tamanho do subconjunto: ";
                 cin>>tam;
-            
+
                 if(tam > 0 && tam <= grafo->ordem) {
-                
+
                     vector<char> ids = get_conjunto_ids(grafo,tam);
-                
+
                     Grafo *subgrafo = grafo->getSubgrafo(ids);
                     if(subgrafo->numComponentesConexas() > 1) {
                         cout<<"O subgrafo escolhido nao é conexo, impossivel calcular a arvore geradora minima\n\n";
@@ -121,35 +117,35 @@ void Gerenciador::comandos(Grafo* grafo) {
                         break;
                     }
                     delete subgrafo;
-                
-                
+
+
                     Grafo* arvore_geradora_minima_prim = grafo->arvore_geradora_minima_prim(ids);
                     cout<< "Arvore geradora minima pelo método de Prim: " << endl;
                     cout << arvore_geradora_minima_prim->toString() << endl;
-                
+
                     if(pergunta_imprimir_arquivo("agm_prim.txt")) {
                         imprimeGrafoNoArquivo("agm_prim.txt", *arvore_geradora_minima_prim);
                     }
-                
+
                     delete arvore_geradora_minima_prim;
-                
+
                 }else {
                     cout<<"Valor invalido"<<endl;
                 }
-            
+
                 break;
             }
-        
+
             case 'f': {
-            
+
                 int tam;
                 cout<<"Digite o tamanho do subconjunto: ";
                 cin>>tam;
-            
+
                 if(tam > 0 && tam <= grafo->ordem) {
-                
+
                     vector<char> ids = get_conjunto_ids(grafo,tam);
-                
+
                     Grafo *subgrafo = grafo->getSubgrafo(ids);
                     if(subgrafo->numComponentesConexas() > 1) {
                         cout<<"O subgrafo escolhido nao é conexo, impossivel calcular a arvore geradora minima\n\n";
@@ -157,40 +153,40 @@ void Gerenciador::comandos(Grafo* grafo) {
                         break;
                     }
                     delete subgrafo;
-                
+
                     Grafo* arvore_geradora_minima_kruskal = grafo->arvore_geradora_minima_kruskal(ids);
                     cout << "Arvore geradora minima pelo método de Kruskal: " << endl;
                     cout << arvore_geradora_minima_kruskal->toString() << endl;
-                
+
                     if(pergunta_imprimir_arquivo("agm_kruskal.txt")) {
                         imprimeGrafoNoArquivo("agm_kruskal.txt", *arvore_geradora_minima_kruskal);
                     }
-                
+
                     delete arvore_geradora_minima_kruskal;
-                
+
                 }else {
                     cout<<"Valor invalido"<<endl;
                 }
-            
+
                 break;
             }
-        
+
             case 'g': {
-            
+
                 char id_no = get_id_entrada();
                 Grafo* arvore_caminhamento_profundidade = grafo->arvore_caminhamento_profundidade(id_no);
                 cout<< "Arvore dada pela busca em profundidade a partir do nó " << id_no << endl;
                 cout << arvore_caminhamento_profundidade->toString() << endl;
                 cout << "Aresta com peso -1 são arestas de retorno" << endl;
-            
+
                 if(pergunta_imprimir_arquivo("arvore_caminhamento_profundidade.txt")) {
                     imprimeGrafoNoArquivo("arvore_caminhamento_profundidade.txt", *arvore_caminhamento_profundidade);
                 }
-            
+
                 delete arvore_caminhamento_profundidade;
                 break;
             }
-        
+
             case 'h': {
                 int r = grafo->raio();
                 int d = grafo->diametro();
@@ -199,17 +195,17 @@ void Gerenciador::comandos(Grafo* grafo) {
             
                 // Raio (apenas o valor)
                 cout << r << endl;
-                
+
                 // Diâmetro (apenas o valor)
                 cout << d << endl;
-                
+
                 // Centro (elementos separados por vírgula)
                 for (int i = 0; i < c.size(); i++) {
                     cout << c[i];
                     if (i < c.size() - 1) cout << ",";
                 }
                 cout << endl;
-                
+
                 // Periferia (elementos separados por vírgula)
                 for (int i = 0; i < p.size(); i++) {
                     cout << p[i];
@@ -223,19 +219,19 @@ void Gerenciador::comandos(Grafo* grafo) {
                     if (outfile) {
                         outfile << r << endl;
                         outfile << d << endl;
-                        
+
                         for (int i = 0; i < c.size(); i++) {
                             outfile << c[i];
                             if (i < c.size() - 1) outfile << ",";
                         }
                         outfile << endl;
-                        
+
                         for (int i = 0; i < p.size(); i++) {
                             outfile << p[i];
                             if (i < p.size() - 1) outfile << ",";
                         }
                         outfile << endl;
-                        
+
                         cout << "Resultados salvos em raio_diametro_centro_periferia.txt" << endl;
                     } else {
                         cout << "Erro ao salvar arquivo!" << endl;
@@ -243,11 +239,11 @@ void Gerenciador::comandos(Grafo* grafo) {
                 }
                 break;
             }
-        
+
             case '0': {
                 running = !running;
                 cout<<"Programa terminado!"<<endl;
-                exit(0);
+                break;
             }
             default: {
                 cout<<"Opção inválida"<<endl;
