@@ -22,13 +22,12 @@ void Gerenciador::comandos(Grafo* grafo) {
                 char id_no = get_id_entrada();
                 vector<char> fecho_transitivo_direto = grafo->fecho_transitivo_direto(id_no);
                 cout << "Fecho transitivo direto do nó " << id_no << ": " << endl;
-                cout << "{";
                 for(int i = 0; i < fecho_transitivo_direto.size(); ++i) {
                     cout << fecho_transitivo_direto[i];
                     if(i < fecho_transitivo_direto.size() - 1)
-                        cout << ", ";
+                        cout << ",";
                 }
-                cout<<"}"<<endl<<endl;
+                cout<<endl<<endl;
 
                 if(pergunta_imprimir_arquivo("fecho_trans_dir.txt")) {
                     imprimeVetorNoArquivo("fecho_trans_dir.txt", fecho_transitivo_direto);
@@ -43,13 +42,12 @@ void Gerenciador::comandos(Grafo* grafo) {
                 vector<char> fecho_transitivo_indireto = grafo->fecho_transitivo_indireto(id_no);
             
                 cout << "Fecho transitivo indireto do no " << id_no << ": " << endl;
-                cout << "{";
                 for(int i = 0; i < fecho_transitivo_indireto.size(); ++i) {
                     cout << fecho_transitivo_indireto[i];
                     if(i < fecho_transitivo_indireto.size() - 1)
-                        cout << ", ";
+                        cout << ",";
                 }
-                cout<<"}"<<endl<<endl;
+                cout<<endl<<endl;
 
                 if(pergunta_imprimir_arquivo("fecho_trans_indir.txt")) {
                     imprimeVetorNoArquivo("fecho_trans_indir.txt", fecho_transitivo_indireto);
@@ -63,13 +61,12 @@ void Gerenciador::comandos(Grafo* grafo) {
                 char id_no_2 = get_id_entrada();
                 vector<char> caminho_minimo_dijkstra = grafo->caminho_minimo_dijkstra(id_no_1,id_no_2);
                 cout<<"Caminho minimo entre " << id_no_1 << " e " << id_no_2 << ": " << endl;
-                cout << "{";
                 for(int i = 0; i < caminho_minimo_dijkstra.size(); ++i) {
                     cout << caminho_minimo_dijkstra[i];
                     if(i < caminho_minimo_dijkstra.size() - 1)
-                        cout << ", ";
+                        cout << ",";
                 }
-                cout<<"}"<<endl<<endl;
+                cout<<endl<<endl;
 
                 if(pergunta_imprimir_arquivo("caminho_minimo_dijkstra.txt")) {
                     imprimeVetorNoArquivo("caminho_minimo_dijkstra.txt", caminho_minimo_dijkstra);
@@ -85,13 +82,12 @@ void Gerenciador::comandos(Grafo* grafo) {
                 char id_no_2 = get_id_entrada();
                 vector<char> caminho_minimo_floyd = grafo->caminho_minimo_floyd(id_no_1,id_no_2);
                 cout << "Caminho minimo entre " << id_no_1 << " e " << id_no_2 << ": " << endl;
-                cout << "{";
                 for(int i = 0; i < caminho_minimo_floyd.size(); ++i) {
                     cout << caminho_minimo_floyd[i];
                     if(i < caminho_minimo_floyd.size() - 1)
-                        cout << ", ";
+                        cout << ",";
                 }
-                cout<<"}"<<endl<<endl;
+                cout<<endl<<endl;
 
                 if(pergunta_imprimir_arquivo("caminho_minimo_floyd.txt")) {
                     imprimeVetorNoArquivo("caminho_minimo_floyd.txt", caminho_minimo_floyd);
@@ -421,13 +417,11 @@ void Gerenciador::imprimeVetorNoArquivo(const std::string& nomeArquivo, vector<c
     outfile.open(nomeArquivo, ios::out);
     if(!outfile) throw std::runtime_error("Erro ao criar: " + nomeArquivo);
 
-    outfile << "{";
     for(int i = 0; i < vetorArquivo.size(); ++i) {
         outfile << vetorArquivo[i];
         if(i < vetorArquivo.size() - 1)
-            outfile << ", ";
+            outfile << ",";
     }
-    outfile<<"}"<<endl<<endl;
 
     outfile.close();
 
