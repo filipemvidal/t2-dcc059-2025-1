@@ -21,6 +21,11 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 char id_no = get_id_entrada();
                 vector<char> fecho_transitivo_direto = grafo->fecho_transitivo_direto(id_no);
+                if(fecho_transitivo_direto.empty()) {
+                    cout << "O nó " << id_no << " não possui fecho transitivo direto." << endl;
+                    cout << endl;
+                    break;
+                }
                 cout << "Fecho transitivo direto do nó " << id_no << ": " << endl;
                 for(int i = 0; i < fecho_transitivo_direto.size(); ++i) {
                     cout << fecho_transitivo_direto[i];
@@ -40,6 +45,12 @@ void Gerenciador::comandos(Grafo* grafo) {
 
                 char id_no = get_id_entrada();
                 vector<char> fecho_transitivo_indireto = grafo->fecho_transitivo_indireto(id_no);
+
+                if(fecho_transitivo_indireto.empty()) {
+                    cout << "O nó " << id_no << " não possui fecho transitivo indireto." << endl;
+                    cout << endl;
+                    break;
+                }
             
                 cout << "Fecho transitivo indireto do no " << id_no << ": " << endl;
                 for(int i = 0; i < fecho_transitivo_indireto.size(); ++i) {
@@ -417,6 +428,13 @@ void Gerenciador::imprimeVetorNoArquivo(const std::string& nomeArquivo, vector<c
     outfile.open(nomeArquivo, ios::out);
     if(!outfile) throw std::runtime_error("Erro ao criar: " + nomeArquivo);
 
+    if(vetorArquivo.empty()) {
+        outfile << "Vetor vazio" << std::endl;
+        outfile.close();
+        std::cout << "Vetor vazio, nada para imprimir no arquivo." << std::endl;
+        return;
+    }
+
     for(int i = 0; i < vetorArquivo.size(); ++i) {
         outfile << vetorArquivo[i];
         if(i < vetorArquivo.size() - 1)
@@ -432,6 +450,13 @@ void Gerenciador::imprimeGrafoNoArquivo(const std::string& nomeArquivo, Grafo& g
     std::ofstream outfile;
     outfile.open(nomeArquivo, ios::out);
     if(!outfile) throw std::runtime_error("Erro ao criar: " + nomeArquivo);
+
+    if(grafoArquivo.lista_adj.empty()) {
+        outfile << "Grafo vazio" << std::endl;
+        outfile.close();
+        std::cout << "Grafo vazio, nada para imprimir no arquivo." << std::endl;
+        return;
+    }
 
     outfile << grafoArquivo.toString() << endl << endl;
 
