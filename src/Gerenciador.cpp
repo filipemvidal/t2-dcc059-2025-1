@@ -3,6 +3,7 @@
 
 
 void Gerenciador::comandos(Grafo* grafo) {
+    bool running = true;
     cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
     cout<<"(a) Fecho transitivo direto de um no;"<<endl;
     cout<<"(b) Fecho transitivo indireto de um no;"<<endl;
@@ -16,6 +17,8 @@ void Gerenciador::comandos(Grafo* grafo) {
 
     char resp;
     cin >> resp;
+    while (running){
+    
     switch (resp) {
         case 'a': {
 
@@ -243,28 +246,16 @@ void Gerenciador::comandos(Grafo* grafo) {
             break;
         }
 
-        case 'i': {
-
-            vector<char> articulacao = grafo->vertices_de_articulacao();
-            cout<<"Metodo de impressao em tela nao implementado"<<endl<<endl;
-
-            if(pergunta_imprimir_arquivo("arvore_caminhamento_profundidade.txt")) {
-                cout<<"Metodo de impressao em arquivo nao implementado"<<endl;
-            }
-
-            break;
-        }
-
         case '0': {
+            running = !running;
+            cout<<"Programa terminado!"<<endl;
             exit(0);
         }
         default: {
             cout<<"Opção inválida"<<endl;
         }
     }
-
-    comandos(grafo);
-
+    }
 }
 
 char Gerenciador::get_id_entrada() {
