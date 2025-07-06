@@ -19,12 +19,14 @@ Grafo::~Grafo() {
 }
 
 void Grafo::adicionarNo(char idNovoNo, int pesoNovoNo){
+    cout << "Adicionando no: " << idNovoNo << endl;
     No* novoNo = new No(idNovoNo, in_ponderado_vertice? pesoNovoNo : 0);
     lista_adj.push_back(novoNo);
     ordem++;
 }
 
 void Grafo::adicionarAresta(char origemID, char destinoID, int peso){
+    cout << "Chamei essa função" << endl;
     No* no1 = nullptr;
     No* no2 = nullptr;
 
@@ -54,6 +56,7 @@ void Grafo::adicionarAresta(char origemID, char destinoID, int peso){
         no2->adicionarAresta(arestaInversa);
     } else {
         // Adiciona aresta invertida nas invertidas para Fecho Transitivo Indireto
+        cout << "Aresta invertida adicionada de " << origemID << " para " << destinoID << endl;
         no2->adicionarArestaInvertida(arestaInversa);
     }
 }
