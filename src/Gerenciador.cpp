@@ -22,7 +22,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 char id_no = get_id_entrada();
                 vector<char> fecho_transitivo_direto = grafo->fecho_transitivo_direto(id_no);
                 if(fecho_transitivo_direto.empty()) {
-                    cout << "O nó " << id_no << " não possui fecho transitivo direto." << endl;
+                    cout << "O nó " << id_no << " não possui nós no fecho transitivo direto." << endl;
                     cout << endl;
                     break;
                 }
@@ -47,7 +47,7 @@ void Gerenciador::comandos(Grafo* grafo) {
                 vector<char> fecho_transitivo_indireto = grafo->fecho_transitivo_indireto(id_no);
 
                 if(fecho_transitivo_indireto.empty()) {
-                    cout << "O nó " << id_no << " não possui fecho transitivo indireto." << endl;
+                    cout << "O nó " << id_no << " não possui nós no fecho transitivo indireto." << endl;
                     cout << endl;
                     break;
                 }
@@ -200,19 +200,20 @@ void Gerenciador::comandos(Grafo* grafo) {
                 vector<char> c = grafo->centro();
                 vector<char> p = grafo->periferia();
             
+
                 // Raio (apenas o valor)
                 cout << r << endl;
-
+                
                 // Diâmetro (apenas o valor)
                 cout << d << endl;
-
+                
                 // Centro (elementos separados por vírgula)
                 for (int i = 0; i < c.size(); i++) {
                     cout << c[i];
                     if (i < c.size() - 1) cout << ",";
                 }
                 cout << endl;
-
+                
                 // Periferia (elementos separados por vírgula)
                 for (int i = 0; i < p.size(); i++) {
                     cout << p[i];
@@ -226,13 +227,13 @@ void Gerenciador::comandos(Grafo* grafo) {
                     if (outfile) {
                         outfile << r << endl;
                         outfile << d << endl;
-
+                        
                         for (int i = 0; i < c.size(); i++) {
                             outfile << c[i];
                             if (i < c.size() - 1) outfile << ",";
                         }
                         outfile << endl;
-
+                        
                         for (int i = 0; i < p.size(); i++) {
                             outfile << p[i];
                             if (i < p.size() - 1) outfile << ",";
@@ -340,7 +341,6 @@ Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
         delete grafo;
         throw std::runtime_error("Número de vértices inválido");
     }
-    grafo->ordem = numVertices;
 
     // Lê vértices
     char id;
