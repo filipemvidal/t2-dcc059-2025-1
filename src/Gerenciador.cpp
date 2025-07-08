@@ -332,10 +332,7 @@ Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
     }
 
     // Criar o grafo e setar propriedades
-    Grafo* grafo = new Grafo();
-    grafo->in_direcionado = direcionado;
-    grafo->in_ponderado_vertice = ponderadoVertices;
-    grafo->in_ponderado_aresta = ponderadoArestas;
+    Grafo* grafo = new Grafo(direcionado, ponderadoVertices, ponderadoArestas);
 
     // Lê número de vértices (linha 2)
     int numVertices;
@@ -362,9 +359,7 @@ Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
             peso = 0; // Peso padrão para vértices não ponderados
         }
         
-        // Criar e adicionar vértice
-        No* novoNo = new No(id, peso);
-        grafo->lista_adj.push_back(novoNo);
+        grafo->adicionarNo(id, peso);
     }
 
     // Lê arestas
@@ -387,37 +382,9 @@ Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
             delete grafo;
             throw std::runtime_error("Peso faltando em aresta: " + linha);
         }
-
-        // Encontrar nó de origem na lista
-        auto it = std::find_if(grafo->lista_adj.begin(), grafo->lista_adj.end(), 
-            [&](No* no) { return no->getID() == origem; });
-        
-        if (it == grafo->lista_adj.end()) {
-            delete grafo;
-            throw std::runtime_error("Vértice de origem não encontrado: " + std::string(1, origem));
-        }
         
         // Adicionar aresta
-        Aresta* novaAresta = new Aresta(destino, pesoAresta);
-        (*it)->adicionarAresta(novaAresta);
-        
-        // Se o grafo não for direcionado, precisamos adicionar a aresta inversa também
-        // para que o grafo seja simétrico.
-        if (!direcionado) {
-            // Primeiro, encontramos o nó de destino na lista de nós.
-            auto it_dest = std::find_if(grafo->lista_adj.begin(), grafo->lista_adj.end(),
-                [&](No* no) { return no->getID() == destino; });
-            
-            // Se o nó de destino não for encontrado, lançamos uma exceção.
-            if (it_dest == grafo->lista_adj.end()) {
-                delete grafo;
-                throw std::runtime_error("Vertice de destino nao encontrado: " + std::string(1, destino));
-            }
-            
-            // Agora, adicionamos a aresta inversa ao nó de destino.
-            Aresta* arestaInversa = new Aresta(origem, pesoAresta);
-            (*it_dest)->adicionarAresta(arestaInversa);
-        }
+        grafo->adicionarAresta(origem, destino, pesoAresta);
     }
 
     return grafo;

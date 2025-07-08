@@ -30,17 +30,17 @@ public:
     vector<char> fecho_transitivo_direto(char id_no); // a RESOLVIDO
     vector<char> fecho_transitivo_indireto(char id_no); // b RESOLVIDO
     vector<char> caminho_minimo_dijkstra(const char id_no_a, const char id_no_b); // c
-    vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d
+    vector<char> caminho_minimo_floyd(char id_no, char id_no_b); // d RESOLVIDO
     Grafo* arvore_geradora_minima_prim(vector<char> ids_nos); // e RESOLVIDO
     Grafo* arvore_geradora_minima_kruskal(vector<char> ids_nos); // f RESOLVIDO
     Grafo* arvore_caminhamento_profundidade(char id_no); // g RESOLVIDO
-    int raio(); // h 1
-    int diametro(); // h 2
-    vector<char> centro(); // h 3
-    vector<char> periferia(); // h 4
+    int raio(); // h 1 RESOLVIDO
+    int diametro(); // h 2  RESOLVIDO
+    vector<char> centro(); // h 3 RESOLVIDO
+    vector<char> periferia(); // h 4 RESOLVIDO
     vector<vector<int>> floydWarshall(); // utilizado no h, diferente do caminho_minimo_floyd
-    vector<int> excentricidades(const vector<vector<int>>& dist);
-    vector<char> vertices_de_articulacao(); // i
+    vector<int> excentricidades(const vector<vector<int>>& dist); // utilizado no h
+    vector<char> vertices_de_articulacao(); 
 
     // variaveis do grafo
     int ordem;
