@@ -317,8 +317,6 @@ bool Gerenciador::pergunta_imprimir_arquivo(string nome_arquivo) {
     }
 }
 
-#include "Gerenciador.h"
-
 // MÉTODO NOVO
 Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
     std::ifstream arquivo(nomeArquivo);
