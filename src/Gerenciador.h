@@ -5,6 +5,7 @@
 #include "Grafo.h"
 #include <algorithm>
 #include <sstream>
+#include "TwoDominatingSet.h"
 
 using namespace std;
 class Gerenciador {
