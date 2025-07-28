@@ -1,7 +1,7 @@
 #include "Gerenciador.h"
 #include <fstream>
 
-void Gerenciador::comandos(Grafo* grafo) {
+void Gerenciador::comandos1(Grafo* grafo) {
     bool running = true;
     while (running){
         cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
@@ -428,4 +428,15 @@ void Gerenciador::imprimeGrafoNoArquivo(const std::string& nomeArquivo, Grafo& g
     outfile.close();
 
     std::cout << "Conteúdo impresso no arquivo com sucesso" << std::endl;
+}
+
+void Gerenciador::comandos2(Grafo* grafo) {
+    bool running = true;
+    do
+    {
+        cout << "Digite uma das opcoes abaixo e pressione enter:" << endl << endl;
+        cout << "(a) Algoritmo guloso" << endl;
+        cout << "(b) Algoritmo guloso adaptativo" << endl;
+        cout << "(c) Algoritmo guloso adaptativo reativo" << endl; 
+    }while(running);
 }
