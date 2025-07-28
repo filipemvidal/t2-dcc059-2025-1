@@ -1,7 +1,7 @@
 #include "Gerenciador.h"
 #include <fstream>
 
-void Gerenciador::comandos(Grafo* grafo) {
+void Gerenciador::comandos1(Grafo* grafo) {
     bool running = true;
     while (running){
         cout<<"Digite uma das opcoes abaixo e pressione enter:"<<endl<<endl;
@@ -296,7 +296,6 @@ vector<char> Gerenciador::get_conjunto_ids(Grafo *grafo, int tam) {
     return ids;
 }
 
-
 bool Gerenciador::pergunta_imprimir_arquivo(string nome_arquivo) {
 
     cout<<"Imprimir em arquivo externo? ("<<nome_arquivo<<")"<<endl;
@@ -428,4 +427,98 @@ void Gerenciador::imprimeGrafoNoArquivo(const std::string& nomeArquivo, Grafo& g
     outfile.close();
 
     std::cout << "Conteúdo impresso no arquivo com sucesso" << std::endl;
+}
+
+void Gerenciador::comandos2(Grafo* grafo) {
+    bool running = true;
+    do
+    {
+        cout << "Os algoritmos a seguir resolvem o problema de 2-dominating set." << endl << endl;
+        cout << "Digite uma das opcoes abaixo e pressione enter:" << endl << endl;
+        cout << "(a) Algoritmo guloso" << endl;
+        cout << "(b) Algoritmo guloso adaptativo" << endl;
+        cout << "(c) Algoritmo guloso adaptativo reativo" << endl;
+        cout << "(0) Sair" << endl << endl;
+        char resp;
+        cin >> resp;
+        switch (resp) {
+            case 'a': {
+                cout << "Algoritmo guloso selecionado." << endl;
+                TwoDominatingSet *tds = new TwoDominatingSet();
+                vector<char> resultado = tds->Guloso(grafo);
+                delete tds;
+                
+                if (resultado.empty()) {
+                    cout << "Nenhum nó foi selecionado pelo algoritmo guloso." << endl;
+                    cout << endl;
+                    break;
+                }
+
+                cout << "Resultado do algoritmo guloso: ";
+                for (char id : resultado) {
+                    cout << id << " ";
+                }
+                cout << endl;
+                
+                if (pergunta_imprimir_arquivo("resultado_guloso.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso.txt", resultado);
+                }
+                break;
+            }
+            case 'b': {
+                cout << "Algoritmo guloso adaptativo selecionado." << endl;
+                TwoDominatingSet *tds = new TwoDominatingSet();
+                vector<char> resultado = tds->GulosoAdaptativo(grafo);
+                delete tds;
+                
+                if (resultado.empty()) {
+                    cout << "Nenhum nó foi selecionado pelo algoritmo guloso adaptativo." << endl;
+                    cout << endl;
+                    break;
+                }
+
+                cout << "Resultado do algoritmo guloso adaptativo: ";
+                for (char id : resultado) {
+                    cout << id << " ";
+                }
+                cout << endl;
+                
+                if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso_adaptativo.txt", resultado);
+                }
+                break;
+            }
+            case 'c': {
+                cout << "Algoritmo guloso adaptativo reativo selecionado." << endl;
+                TwoDominatingSet *tds = new TwoDominatingSet();
+                vector<char> resultado = tds->GulosoAdaptativoReativo(grafo);
+                delete tds;
+                
+                if (resultado.empty()) {
+                    cout << "Nenhum nó foi selecionado pelo algoritmo guloso adaptativo reativo." << endl;
+                    cout << endl;
+                    break;
+                }
+
+                cout << "Resultado do algoritmo guloso adaptativo reativo: ";
+                for (char id : resultado) {
+                    cout << id << " ";
+                }
+                cout << endl;
+                
+                if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo_reativo.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso_adaptativo_reativo.txt", resultado);
+                }
+                break;
+            }
+            case '0': {
+                running = false;
+                cout << "Programa terminado!" << endl;
+                break;
+            }
+            default: {
+                cout << "Opção inválida" << endl;
+            }
+        }
+    }while(running);
 }
