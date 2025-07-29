@@ -38,3 +38,12 @@ char No::getID(){
 void No::setID(char id){
     this->id = id;
 }
+
+bool No::isAdjacent(char idNo) {
+    for (const auto& aresta : arestas) {
+        if (aresta->getIDalvo() == idNo) {
+            return true;
+        }
+    }
+    return false;
+}
