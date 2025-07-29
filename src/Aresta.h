@@ -2,17 +2,20 @@
 #define ARESTA_H
 
 using namespace std;
+
+class No; 
+
 class Aresta {
 public:
-    Aresta(char idAlvo, int peso = 0);
+    Aresta(No* alvo, int peso = 0);
     ~Aresta();
 
     // ID do nó pro qual ela aponta
-    char id_no_alvo;
+    No* no_alvo;
     int peso;
 
-    char getIDalvo();
-    void setIDalvo(char novoID);
+    No* getNoAlvo();
+    void setNoAlvo(No* novoNo);
     int getPeso();
     void setPeso(int peso);
 };

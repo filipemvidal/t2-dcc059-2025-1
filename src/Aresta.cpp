@@ -1,7 +1,8 @@
 #include "Aresta.h"
+#include "No.h"
 
-Aresta::Aresta(char idAlvo, int peso){
-    setIDalvo(idAlvo);
+Aresta::Aresta(No* alvo, int peso){
+    setNoAlvo(alvo);
     setPeso(peso);
 }
 
@@ -9,12 +10,8 @@ Aresta::~Aresta(){
 
 }
 
-char Aresta::getIDalvo(){
-    return id_no_alvo;
-}
-
-void Aresta::setIDalvo(char novoID){
-    this->id_no_alvo = novoID;
+void Aresta::setNoAlvo(No* no){
+    this->no_alvo = no;
 }
 
 int Aresta::getPeso(){

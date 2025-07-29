@@ -4,9 +4,12 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "Aresta.h"
+#include <set>
+
 
 using namespace std;
+
+class Aresta; // Forward declaration
 
 class No {
 public:
@@ -23,6 +26,7 @@ public:
 
     // funções e operações
     void adicionarAresta(Aresta* novaAresta);
+    void adicionarAresta(Aresta* novaAresta, bool ehDirecionado);
     void adicionarArestaInvertida(Aresta* novaAresta);
 
     // gets e sets
@@ -30,6 +34,9 @@ public:
     void setPeso(int peso);
     char getID();
     void setID(char id);
+
+    set<No*> nosDominados;
+    void domina(No* noDominado);
 };
 
 
