@@ -43,15 +43,15 @@ void Grafo::adicionarAresta(char origemID, char destinoID, int peso){
     }
 
     int peso_aresta = in_ponderado_aresta? peso : 1;
-    Aresta* novaAresta = new Aresta(destinoID, peso_aresta);
+    Aresta* novaAresta = new Aresta(no2, peso_aresta);
     // cria a aresta apontando para o destino
-    no1->adicionarAresta(novaAresta);
+    no1->adicionarAresta(novaAresta, in_direcionado);
     // adiciona aresta ao nó de origem
 
-    Aresta* arestaInversa = new Aresta(origemID, peso_aresta);
+    Aresta* arestaInversa = new Aresta(no1, peso_aresta);
     if(!in_direcionado){
         // adiciona aresta inversa se o grafo não for direcionado
-        no2->adicionarAresta(arestaInversa);
+        no2->adicionarAresta(arestaInversa, in_direcionado);
     } else {
         // Adiciona aresta invertida nas invertidas para Fecho Transitivo Indireto
         no2->adicionarArestaInvertida(arestaInversa);
@@ -81,7 +81,7 @@ vector<char> Grafo::fecho_transitivo_direto(char id_no) {
 void Grafo::fecho_transitivo_direto_aux(char id_no, map<char, bool> &visitados, vector<char> &resultado) {
     No* no = getNo(id_no);
     for(const auto& aresta : no->arestas) {
-        char id_alvo = aresta->id_no_alvo;
+        char id_alvo = aresta->getIDalvo();
         if(!visitados[id_alvo]){
             visitados[id_alvo] = true;
             resultado.push_back(id_alvo);
@@ -102,7 +102,7 @@ vector<char> Grafo::fecho_transitivo_indireto(char id_no) {
 void Grafo::fecho_transitivo_indireto_aux(char id_no, map<char, bool> &visitados, vector<char> &resultado) {
     No* no = getNo(id_no);
     for(const auto& aresta : no->arestas_invertidas) {
-        char id_alvo = aresta->id_no_alvo;
+        char id_alvo = aresta->getIDalvo();
         if(!visitados[id_alvo]){
             visitados[id_alvo] = true;
             resultado.push_back(id_alvo);
@@ -132,7 +132,7 @@ vector<char> Grafo::caminho_minimo_dijkstra(const char id_no_a, const char id_no
 
         No* noAtual = getNo(atual);
         for (const auto& aresta : noAtual->arestas) { //Olhamos cada aresta do nó atual
-            char id_alvo = aresta->id_no_alvo;
+            char id_alvo = aresta->getIDalvo();
             int peso = aresta->getPeso();
             int nova_distancia = distancias[atual] + peso;
 
@@ -338,7 +338,7 @@ Grafo *Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
                 auto it_alvo = find_if(ids_nos.begin(), ids_nos.end(),
                                        [aresta](char id_alvo)
                                        {
-                                           return id_alvo == aresta->id_no_alvo;
+                                           return id_alvo == aresta->getIDalvo();
                                        });
                 if (it_alvo == ids_nos.end()) // se o no alvo nao esta no ids_nos, pula para a proxima aresta
                     continue;
@@ -347,7 +347,7 @@ Grafo *Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
                     find_if(arestas.begin(), arestas.end(), // caso contrario, verifica se a aresta ja foi adicionada
                             [aresta, no](const ArestaInicioFim *a)
                             {
-                                return (a->id_inicio == aresta->id_no_alvo && a->aresta->id_no_alvo == no->id);
+                                return (a->id_inicio == aresta->getIDalvo() && a->aresta->getIDalvo() == no->id);
                             }) == arestas.end())
                 {
                     ArestaInicioFim *aresta_inicio_fim = new ArestaInicioFim();
@@ -374,17 +374,17 @@ Grafo *Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 
         vector<char> fecho_direto = resultado->fecho_transitivo_direto(aresta_inicio_fim->id_inicio);
 
-        if (find(fecho_direto.begin(), fecho_direto.end(), aresta_inicio_fim->aresta->id_no_alvo) == fecho_direto.end())
+        if (find(fecho_direto.begin(), fecho_direto.end(), aresta_inicio_fim->aresta->getIDalvo()) == fecho_direto.end())
         {
             // se o no alvo da aresta não é alcançado pelo no de inicio, adiciona a aresta ao grafo resultado
             No *no_inicio = resultado->getNo(aresta_inicio_fim->id_inicio);
-            Aresta *nova_aresta = new Aresta(aresta_inicio_fim->aresta->id_no_alvo, aresta_inicio_fim->aresta->peso);
+            Aresta *nova_aresta = new Aresta(aresta_inicio_fim->aresta->getIDalvo(), aresta_inicio_fim->aresta->peso);
             no_inicio->adicionarAresta(nova_aresta);
 
             if (!resultado->in_direcionado)
             {
                 // se o grafo nao for direcionado, adiciona a aresta inversa
-                No *no_alvo = resultado->getNo(aresta_inicio_fim->aresta->id_no_alvo);
+                No *no_alvo = resultado->getNo(aresta_inicio_fim->aresta->getIDalvo());
                 Aresta *nova_aresta_inversa = new Aresta(aresta_inicio_fim->id_inicio, aresta_inicio_fim->aresta->peso);
                 no_alvo->adicionarAresta(nova_aresta_inversa);
             }
@@ -424,7 +424,7 @@ void Grafo::arvore_caminhamento_profundidade_aux(char id_no, char id_pai, map<ch
     No* no = getNo(id_no);
     
     for(Aresta *aresta : no->arestas) {
-        char id_alvo = aresta->id_no_alvo;
+        char id_alvo = aresta->getIDalvo();
         if(!visitados[id_alvo]) {
             resultado.adicionarNo(id_alvo, getNo(id_alvo)->getPeso());
             resultado.adicionarAresta(id_no, id_alvo, 1); // peso 1 significa que é uma aresta de ligação
@@ -434,7 +434,7 @@ void Grafo::arvore_caminhamento_profundidade_aux(char id_no, char id_pai, map<ch
             // Se o nó já foi visitado, mas é diferente do pai, adiciona a aresta de retorno
             bool aresta_existente = false;
             for(Aresta *aresta: resultado.getNo(id_no)->arestas) {
-                if(aresta->id_no_alvo == id_alvo) {
+                if(aresta->getIDalvo() == id_alvo) {
                     // Se a aresta já existe, não adiciona novamente
                     aresta_existente = true;
                 }
@@ -590,8 +590,8 @@ string Grafo::output_csAcademy() {
             auto it = find_if(arestas.begin(), arestas.end(),
             [aresta, no](const ArestaInicioFim* a)
             {
-                return a->id_inicio == aresta->id_no_alvo
-                && a->aresta->id_no_alvo == no->getID();
+                return a->id_inicio == aresta->getIDalvo()
+                && a->aresta->getIDalvo() == no->getID();
             });
 
             if (it == arestas.end() || in_direcionado) {

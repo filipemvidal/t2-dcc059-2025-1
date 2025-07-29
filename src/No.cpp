@@ -15,17 +15,10 @@ No::~No(){
 }
 
 // ===== Funções e operações =====
+
+// TODO: DESCONTINUADO
 void No::adicionarAresta(Aresta* novaAresta){
     arestas.push_back(novaAresta);
-
-    // Adiciona como dominado o nó que a aresta aponta
-    domina(novaAresta->getNoAlvo());
-    for(const auto& invertida : arestas_invertidas){
-        invertida->getNoAlvo()->domina(this);
-    }
-    // Em um grafo direcionado, essa linha atualiza a lista de dominados dos nós que atingem ele com distância 2.
-
-    // TODO: Precisamos entender como fazer isso em um grafo não direcionado
 }
 
 void No::adicionarAresta(Aresta* novaAresta, bool ehDirecionado){

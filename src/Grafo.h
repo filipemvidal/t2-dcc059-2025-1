@@ -6,6 +6,7 @@
 #define GRAFO_H
 
 #include "No.h"
+#include "Aresta.h"
 #include <iostream>
 #include <vector>
 #include <map>

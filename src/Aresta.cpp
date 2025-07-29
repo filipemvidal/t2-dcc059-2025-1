@@ -21,3 +21,7 @@ int Aresta::getPeso(){
 void Aresta::setPeso(int peso){
     this->peso = peso;
 }
+
+char Aresta::getIDalvo() {
+    return no_alvo->getID();
+}

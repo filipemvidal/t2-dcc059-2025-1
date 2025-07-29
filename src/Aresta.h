@@ -16,6 +16,7 @@ public:
 
     No* getNoAlvo();
     void setNoAlvo(No* novoNo);
+    char getIDalvo();
     int getPeso();
     void setPeso(int peso);
 };
