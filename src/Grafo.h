@@ -56,9 +56,9 @@ public:
     string output_csAcademy();
     int numComponentesConexas();
     Grafo* getSubgrafo(vector<char> ids_nos);
+    No* getNo(char id);
   
 private:
-    No* getNo(char id);
     void fecho_transitivo_direto_aux(char id_no, map<char, bool> &visitados, vector<char> &resultado);
     void fecho_transitivo_indireto_aux(char id_no, map<char, bool> &visitados, vector<char> &resultado);
     void arvore_caminhamento_profundidade_aux(char id_no, char id_pai, map<char, bool> &visitados, Grafo &resultado);

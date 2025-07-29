@@ -24,12 +24,14 @@ public:
     // funções e operações
     void adicionarAresta(Aresta* novaAresta);
     void adicionarArestaInvertida(Aresta* novaAresta);
+    bool isAdjacent(char idNo);
 
     // gets e sets
     int getPeso();
     void setPeso(int peso);
     char getID();
     void setID(char id);
+
 };
 
 

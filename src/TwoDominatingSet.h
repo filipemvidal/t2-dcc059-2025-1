@@ -18,7 +18,10 @@ public:
     vector<char> GulosoAdaptativo(Grafo* grafo);
     vector<char> GulosoAdaptativoReativo(Grafo* grafo);
 
-private:
+    bool isValidDominatingSet(const vector<char>& dominatingSet, Grafo* grafo);
+    
+    private:
+    bool isDominated(char id, const vector<char>& dominatingSet, Grafo* grafo);
 
 };
 
