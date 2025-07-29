@@ -28,6 +28,9 @@ void No::adicionarAresta(Aresta* novaAresta, bool ehDirecionado){
         for(const auto& aresta : arestas){
             aresta->getNoAlvo()->domina(novaAresta->getNoAlvo());
         }
+        for(auto* aresta : novaAresta->getNoAlvo()->arestas){
+            domina(aresta->getNoAlvo());
+        }
     }
     
     arestas.push_back(novaAresta); // Adiciona a aresta ao nó
@@ -35,7 +38,7 @@ void No::adicionarAresta(Aresta* novaAresta, bool ehDirecionado){
     // Adiciona como dominado o nó que a aresta aponta, com distância 1
     domina(novaAresta->getNoAlvo());
     
-    if(ehDirecionado) return; // Se for direcionado, não vai para as arestas invertidas
+    if(!ehDirecionado) return; // Se não for direcionado, não vai para as arestas invertidas
     
     for(const auto& invertida : arestas_invertidas){
         invertida->getNoAlvo()->domina(novaAresta->getNoAlvo());

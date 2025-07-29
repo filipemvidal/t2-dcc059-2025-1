@@ -57,6 +57,8 @@ public:
     string output_csAcademy();
     int numComponentesConexas();
     Grafo* getSubgrafo(vector<char> ids_nos);
+
+    void imprimirDominados();
   
 private:
     No* getNo(char id);

@@ -383,6 +383,8 @@ Grafo* Gerenciador::carregarGrafoDoArquivo(const std::string& nomeArquivo) {
         // Adicionar aresta
         grafo->adicionarAresta(origem, destino, pesoAresta);
     }
+    cout << "Grafo eh direcionado: " << (grafo->in_direcionado ? "Sim" : "Não") << endl;
+    grafo->imprimirDominados();
 
     return grafo;
 }

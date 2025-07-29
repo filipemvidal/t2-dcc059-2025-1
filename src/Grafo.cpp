@@ -68,6 +68,16 @@ No* Grafo::getNo(char id) {
     exit(1);
 }
 
+void Grafo::imprimirDominados() {
+    for (No* no : lista_adj) {
+        cout << "No " << no->getID() << " domina: ";
+        for (No* dominado : no->nosDominados) {
+            cout << dominado->getID() << " ";
+        }
+        cout << endl;
+    }
+}
+
 vector<char> Grafo::fecho_transitivo_direto(char id_no) {
     map<char, bool> visitados;
     vector<char> resultado;
@@ -237,28 +247,29 @@ vector<char> Grafo::caminho_minimo_floyd(char id_no, char id_no_b) {
     return caminhoIDs;
 }
 
+
 Grafo* Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
     struct prox{
         char id_no_proximo;
         int custo;
     };
-
+    
     map<char, prox> map_prox; // mapa para armazenar o próximo nó e seu custo
     for(char id_no : ids_nos) {
         map_prox[id_no] = {ids_nos[0], INT_MAX}; // inicializa o mapa com custo infinito
     }
-
+    
     Grafo *resultado = new Grafo(); // grafo resultado
     resultado->in_direcionado = this->in_direcionado;
     resultado->in_ponderado_aresta = this->in_ponderado_aresta;
     resultado->in_ponderado_vertice = this->in_ponderado_vertice;
     resultado->ordem = ids_nos.size();
-
+    
     // cria o nó inicial e adiciona ao grafo resultado
     No *no_inicial = new No(ids_nos[0], getNo(ids_nos[0])->getPeso());
     resultado->lista_adj.push_back(no_inicial);
     map_prox[ids_nos[0]] = {'\0', INT_MAX}; // marca no incial como resolvido
-
+    
     
     No *no_atual = getNo(ids_nos[0]);
     int cont = 1; // contador de nós adicionados
@@ -272,21 +283,21 @@ Grafo* Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
                 }
             }
         }
-
+        
         auto it = min_element(map_prox.begin(), map_prox.end(),
-            [](const pair<char, prox> &a, const pair<char, prox> &b) {
-                return a.second.custo < b.second.custo;
-            });
+        [](const pair<char, prox> &a, const pair<char, prox> &b) {
+            return a.second.custo < b.second.custo;
+        });
         
         // Adiciona o nó com aresta de menor custo ao grafo resultado
         No *novo_no = new No(it->first, getNo(it->first)->getPeso());
-        Aresta *nova_aresta = new Aresta(it->second.id_no_proximo, it->second.custo);
+        No *no_alvo = resultado->getNo(it->second.id_no_proximo);
+        Aresta *nova_aresta = new Aresta(no_alvo, it->second.custo);
         novo_no->adicionarAresta(nova_aresta);
         resultado->lista_adj.push_back(novo_no);
         if(!resultado->in_direcionado) {
             // se o grafo nao for direcionado, adiciona a aresta inversa
-            No *no_alvo = resultado->getNo(it->second.id_no_proximo);
-            Aresta *nova_aresta_inversa = new Aresta(it->first, it->second.custo);
+            Aresta *nova_aresta_inversa = new Aresta(novo_no, it->second.custo);
             no_alvo->adicionarAresta(nova_aresta_inversa);
         }
         
@@ -303,52 +314,52 @@ Grafo* Grafo::arvore_geradora_minima_prim(vector<char> ids_nos) {
 Grafo *Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
 {
 
-    // "pacote" que engloba o no de inicio de uma aresta e a aresta em si
-    struct ArestaInicioFim
+// "pacote" que engloba o no de inicio de uma aresta e a aresta em si
+struct ArestaInicioFim
+{
+    char id_inicio;
+    Aresta *aresta;
+};
+
+vector<ArestaInicioFim *> arestas;
+Grafo *resultado = new Grafo();
+resultado->in_direcionado = this->in_direcionado;
+resultado->in_ponderado_aresta = this->in_ponderado_aresta;
+resultado->in_ponderado_vertice = this->in_ponderado_vertice;
+resultado->ordem = ids_nos.size();
+for (char ind : ids_nos)
+{
+    auto it = find_if(lista_adj.begin(), lista_adj.end(), // procura pelo no na lista de adjacencia
+    [ind](const No *no)
     {
-        char id_inicio;
-        Aresta *aresta;
-    };
-
-    vector<ArestaInicioFim *> arestas;
-    Grafo *resultado = new Grafo();
-    resultado->in_direcionado = this->in_direcionado;
-    resultado->in_ponderado_aresta = this->in_ponderado_aresta;
-    resultado->in_ponderado_vertice = this->in_ponderado_vertice;
-    resultado->ordem = ids_nos.size();
-    for (char ind : ids_nos)
+        return no->id == ind;
+    });
+    
+    if (it != lista_adj.end()) // verifica se o no foi ecnontrado
     {
-        auto it = find_if(lista_adj.begin(), lista_adj.end(), // procura pelo no na lista de adjacencia
-                          [ind](const No *no)
-                          {
-                              return no->id == ind;
-                          });
-
-        if (it != lista_adj.end()) // verifica se o no foi ecnontrado
-        {
-            No *no = *it;
-
+        No *no = *it;
+        
             // cria as |v| subarvores de nós isolados
             No *no_isolado = new No(no->id, no->peso);
             resultado->lista_adj.push_back(no_isolado);
-
+            
             for (Aresta *aresta : no->arestas)
             {
                 // verifica se a aresta aponta para um no que esta no ids_nos
                 auto it_alvo = find_if(ids_nos.begin(), ids_nos.end(),
-                                       [aresta](char id_alvo)
-                                       {
-                                           return id_alvo == aresta->getIDalvo();
-                                       });
+                [aresta](char id_alvo)
+                {
+                    return id_alvo == aresta->getIDalvo();
+                });
                 if (it_alvo == ids_nos.end()) // se o no alvo nao esta no ids_nos, pula para a proxima aresta
-                    continue;
-
+                continue;
+                
                 if (in_direcionado ||                       // se o grafo for direcionado, adiciona todas as arestas
-                    find_if(arestas.begin(), arestas.end(), // caso contrario, verifica se a aresta ja foi adicionada
-                            [aresta, no](const ArestaInicioFim *a)
-                            {
-                                return (a->id_inicio == aresta->getIDalvo() && a->aresta->getIDalvo() == no->id);
-                            }) == arestas.end())
+                find_if(arestas.begin(), arestas.end(), // caso contrario, verifica se a aresta ja foi adicionada
+                [aresta, no](const ArestaInicioFim *a)
+                {
+                    return (a->id_inicio == aresta->getIDalvo() && a->aresta->getIDalvo() == no->id);
+                }) == arestas.end())
                 {
                     ArestaInicioFim *aresta_inicio_fim = new ArestaInicioFim();
                     aresta_inicio_fim->id_inicio = no->id;
@@ -358,42 +369,43 @@ Grafo *Grafo::arvore_geradora_minima_kruskal(vector<char> ids_nos)
             }
         }
     }
-
+    
     // Ordena as arestas pelo peso
     sort(arestas.begin(), arestas.end(),
-         [](const ArestaInicioFim *a, const ArestaInicioFim *b)
-         {
-             return a->aresta->peso < b->aresta->peso;
-         });
-
+    [](const ArestaInicioFim *a, const ArestaInicioFim *b)
+    {
+        return a->aresta->peso < b->aresta->peso;
+    });
+    
     int cont = 0; // contador de arestas adicionadas
     while (cont < resultado->ordem - 1 && !arestas.empty())
     {
         ArestaInicioFim *aresta_inicio_fim = arestas.front();
         arestas.erase(arestas.begin()); // remove a aresta do vetor
-
+        
         vector<char> fecho_direto = resultado->fecho_transitivo_direto(aresta_inicio_fim->id_inicio);
-
+        
         if (find(fecho_direto.begin(), fecho_direto.end(), aresta_inicio_fim->aresta->getIDalvo()) == fecho_direto.end())
         {
             // se o no alvo da aresta não é alcançado pelo no de inicio, adiciona a aresta ao grafo resultado
             No *no_inicio = resultado->getNo(aresta_inicio_fim->id_inicio);
-            Aresta *nova_aresta = new Aresta(aresta_inicio_fim->aresta->getIDalvo(), aresta_inicio_fim->aresta->peso);
+            Aresta *nova_aresta = new Aresta(aresta_inicio_fim->aresta->no_alvo, aresta_inicio_fim->aresta->peso);
             no_inicio->adicionarAresta(nova_aresta);
-
+            
             if (!resultado->in_direcionado)
             {
                 // se o grafo nao for direcionado, adiciona a aresta inversa
                 No *no_alvo = resultado->getNo(aresta_inicio_fim->aresta->getIDalvo());
-                Aresta *nova_aresta_inversa = new Aresta(aresta_inicio_fim->id_inicio, aresta_inicio_fim->aresta->peso);
+                Aresta *nova_aresta_inversa = new Aresta(no_alvo, aresta_inicio_fim->aresta->peso);
                 no_alvo->adicionarAresta(nova_aresta_inversa);
             }
-
+            
             cont++;
         }
     }
     return resultado;
 }
+
 
 Grafo * Grafo::arvore_caminhamento_profundidade(char id_no) {
     map<char, bool> visitado;

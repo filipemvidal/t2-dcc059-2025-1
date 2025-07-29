@@ -10,6 +10,10 @@ Aresta::~Aresta(){
 
 }
 
+No* Aresta::getNoAlvo(){
+    return this->no_alvo;
+}
+
 void Aresta::setNoAlvo(No* no){
     this->no_alvo = no;
 }
