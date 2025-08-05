@@ -2,7 +2,7 @@
 
 TwoDominatingSet::TwoDominatingSet()
 {
-
+    srand(time(0));
 }
 
 TwoDominatingSet::~TwoDominatingSet()
@@ -18,8 +18,72 @@ vector<char> TwoDominatingSet::GulosoAdaptativo(Grafo* grafo) {
     return vector<char>(); // Implementar lógica do algoritmo guloso adaptativo
 }
 
-vector<char> TwoDominatingSet::GulosoAdaptativoReativo(Grafo* grafo) {
-    return vector<char>(); // Implementar lógica do algoritmo guloso adaptativo reativo
+int TwoDominatingSet::pegarAlpha(meuAlpha alphas[], int tam){
+    float random = (float)rand() / RAND_MAX;
+    float soma = 0;
+    for(int i = 0; i < tam; i++){
+        soma += alphas[i].probabilidade;
+        if(random <= soma){
+            return i;
+        }
+    }
+    cout << "Função de pegar alpha não calculou corretamente" << endl;
+    cout << "Soma de probabilidades = " << soma << " e valor randomizado obtido = " << random << endl;
+    exit(1);
+    return -1;
+}
+
+void TwoDominatingSet::atualizaProbabilidades(meuAlpha alphas[], int sizeMelhorSolucao, int tam, int tamGrafo){
+    vector<float> Q (tam, 0);
+    float sumQ = 0;
+    for(int i = 0; i < tam; i++){
+        int qualidadeSol = tamGrafo - sizeMelhorSolucao; 
+        // Quanto melhor a solução, menos nós tem do grafo. Ou seja, precisamos fazer essa conta pra saber a qualidade da solução
+        Q[i] = qualidadeSol/alphas[i].media;
+        sumQ += Q[i];
+    }
+    for(int i = 0; i < tam; i++){
+        alphas[i].probabilidade = Q[i]/sumQ;
+    }
+}
+
+vector<char> TwoDominatingSet::GulosoAdaptativoReativo(Grafo* grafo, float vetAlphas[], int tamAlpha, int numIter, int bloco) {
+    vector<char> melhorSolucao;
+    meuAlpha* alphas = new meuAlpha[tamAlpha];
+    
+    // Primeira iteração com cada um
+    for (int i = 0; i < tamAlpha; i++) {
+        alphas[i].alpha = vetAlphas[i];
+        alphas[i].probabilidade = 1/tamAlpha;
+
+        vector<char> solucaoAtual = GulosoAdaptativo(grafo, alphas[i].alpha);
+        bool isValid = isValidDominatingSet(solucaoAtual, grafo);
+        if (isValid) {
+            alphas[i].media = solucaoAtual.size();
+        } else {
+            alphas[i].media = 0.0f; 
+            cout << "Solução inicial inválida. Reveja o GulosoAdaptativo" << endl;
+        }
+    }
+
+    for(int i = 0; i < numIter; i++){
+        if(i % bloco == 0){
+            atualizaProbabilidades(alphas, melhorSolucao.size(), tamAlpha, grafo->ordem);
+        }
+        int indexAlpha = pegarAlpha(alphas, tamAlpha);
+        meuAlpha* alphaAtual = &alphas[indexAlpha];
+        vector<char> solAtual = GulosoAdaptativo(grafo, alphaAtual->alpha);
+
+        // Atualiza média
+        alphaAtual->media = (alphaAtual->media + solAtual.size())/(++alphaAtual->contador);
+
+        if(melhorSolucao.empty() || solAtual.size() < melhorSolucao.size()){
+            melhorSolucao = solAtual;
+        }
+
+    }
+
+    return melhorSolucao;
 }
 
 bool TwoDominatingSet::isDominated(char id, const vector<char>& dominatingSet, Grafo* grafo) {

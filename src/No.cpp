@@ -22,6 +22,10 @@ void No::adicionarArestaInvertida(Aresta* novaAresta){
     arestas_invertidas.push_back(novaAresta);
 }
 
+int No::getGrau() {
+    return arestas.size();
+}
+
 // ===== Gets e sets =====
 int No::getPeso(){
     return this->peso;

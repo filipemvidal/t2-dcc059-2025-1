@@ -31,6 +31,7 @@ public:
     void setPeso(int peso);
     char getID();
     void setID(char id);
+    int getGrau();
 
 };
 
