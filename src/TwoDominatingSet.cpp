@@ -11,7 +11,17 @@ TwoDominatingSet::~TwoDominatingSet()
 }
 
 vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
-    return vector<char>(); // Implementar lógica do algoritmo guloso
+
+    vector<char> dominatingSet;
+    vector<char> naoDominados;
+
+    // Inicializa o vetor
+    for(No* no : grafo->lista_adj){
+        naoDominados.push_back(no->getID());
+    }
+
+    // Vai retornar o vetor com vértices que compõem o conjunto solução
+    return dominatingSet;
 }
 
 vector<char> TwoDominatingSet::GulosoAdaptativo(Grafo* grafo) {

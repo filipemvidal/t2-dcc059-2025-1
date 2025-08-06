@@ -5,7 +5,11 @@
 
 #include "Grafo.h"
 #include <vector>
+#include <string>
+#include <utility>
+#include <algorithm>
 #include <cstdlib>
+#include <iostream>
 #include <ctime>
 
 using namespace std;
