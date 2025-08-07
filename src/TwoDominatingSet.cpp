@@ -21,22 +21,21 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     }
 
     while(!naoDominados.empty()){
-        char melhorNo = '';
+        char melhorNo = ' ';
         int melhorContribuicao = -1;
 
         for(No* candidato : grafo->lista_adj){
             char idCandidato = candidato->getID();
 
             // Funcao pra ignorar se estiver no conjunto dominante
-            if(find(dominatingSet.begin(), dominatingSet.end(), id) != dominatingSet.end())
+            if(find(dominatingSet.begin(), dominatingSet.end(), idCandidato) != dominatingSet.end())
                 continue;
 
             int contribuicao = 0;
-
             // Função para avaliar quantos ele ajuda a dominar
             for(char alvo : naoDominados){
                 vector<char> conjuntoProvisorio = dominatingSet;
-                conjuntoProvisorio.push_back(id);
+                conjuntoProvisorio.push_back(idCandidato);
                 if(isDominated(alvo, conjuntoProvisorio, grafo)){
                     contribuicao++;
                 }
