@@ -12,12 +12,53 @@ TwoDominatingSet::~TwoDominatingSet()
 
 vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
 
-    vector<char> dominatingSet;
-    vector<char> naoDominados;
+    vector<char> dominatingSet; // Conjunto solução
+    vector<char> naoDominados;  // Nós ainda não 2-dominados
 
-    // Inicializa o vetor
+    // Inicializa todos os nós como não dominados
     for(No* no : grafo->lista_adj){
         naoDominados.push_back(no->getID());
+    }
+
+    while(!naoDominados.empty()){
+        char melhorNo = '';
+        int melhorContribuicao = -1;
+
+        for(No* candidato : grafo->lista_adj){
+            char idCandidato = candidato->getID();
+
+            // Funcao pra ignorar se estiver no conjunto dominante
+            if(find(dominatingSet.begin(), dominatingSet.end(), id) != dominatingSet.end())
+                continue;
+
+            int contribuicao = 0;
+
+            // Função para avaliar quantos ele ajuda a dominar
+            for(char alvo : naoDominados){
+                vector<char> conjuntoProvisorio = dominatingSet;
+                conjuntoProvisorio.push_back(id);
+                if(isDominated(alvo, conjuntoProvisorio, grafo)){
+                    contribuicao++;
+                }
+            }
+
+            if(contribuicao > melhorContribuicao){
+                melhorContribuicao = contribuicao;
+                melhorNo = idCandidato;
+            }
+        }
+
+        // Adiciona o vértice escolhido ao conjunto dominante
+        dominatingSet.push_back(melhorNo);
+
+        // Atualiza a lista de não dominados
+        vector<char> atualizados;
+        for(char alvo:naoDominados){
+            if(!isDominated(alvo, dominatingSet, grafo)){
+                atualizados.push_back(alvo);
+            }
+        }
+        naoDominados = atualizados;
     }
 
     // Vai retornar o vetor com vértices que compõem o conjunto solução
