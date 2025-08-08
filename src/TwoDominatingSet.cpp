@@ -183,6 +183,8 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
         }
 
         /* 
+
+        Isso aqui apareceu apontado pelo COPILOT, vale a pena verificar:
         
         Se usássemos media_alpha = 0.0f para soluções inválidas:
         - Q[i] = (tamGrafo - melhorSolucao) / 0.0f iria gerar divisão por zero
