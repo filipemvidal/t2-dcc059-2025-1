@@ -5,12 +5,10 @@
 
 #include "Grafo.h"
 #include <vector>
-#include <string>
-#include <utility>
-#include <algorithm>
 #include <cstdlib>
-#include <iostream>
 #include <ctime>
+#include <algorithm> // Para max_element, find, etc.
+#include <iostream>  // Para cout
 
 using namespace std;
 
@@ -27,17 +25,26 @@ class TwoDominatingSet
         TwoDominatingSet();
         ~TwoDominatingSet();
 
+        // Algoritmo 1: Guloso determinístico
         vector<char> Guloso(Grafo* grafo);
-        vector<char> GulosoAdaptativo(Grafo* grafo);
+        
+        // Algoritmo 2: Guloso Randomizado Adaptativo
+        vector<char> GulosoAdaptativo(Grafo* grafo, float alpha);
+        
+        // Algoritmo 3: Guloso Randomizado Adaptativo Reativo
         vector<char> GulosoAdaptativoReativo(Grafo* grafo, float alpha[], int tamAlpha, int numIter, int bloco);
 
-        bool isValidDominatingSet(const vector<char>& dominatingSet, Grafo* grafo);
+        // Função de validação
+        bool conjuntoDominanteValido(const vector<char>& conjuntoDominante, Grafo* grafo);
         
-        private:
-        bool isDominated(char id, const vector<char>& dominatingSet, Grafo* grafo);
-        void atualizaProbabilidades(meuAlpha alphas[], int sizeMelhorSolucao, int tam, int tamGrafo);
-        int pegarAlpha(meuAlpha alphas[], int tam);
-
+    private:
+        // Funções auxiliares
+        bool estaDominado(char id, const vector<char>& conjuntoDominante, Grafo* grafo);
+        void atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelhorSolucao, int quantidade, int tamanhoGrafo);
+        int pegarAlpha(meuAlpha alphas[], int quantidade);
+        
+        // Função de verificação de adjacência
+        bool ehAdjacente(No* no, char id);
 };
 
 #endif
