@@ -13,7 +13,7 @@ TwoDominatingSet::~TwoDominatingSet()
 
 vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {    
     vector<char> dominatingSet;
-    map<char, int> ehDominadoPor;
+    map<char, int> ehDominadoQtd;
     priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq;
 
 
@@ -21,7 +21,12 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     for(No* no : grafo->lista_adj){
         pq.push({no->getGrau(), no->getID()});
 
-        ehDominadoPor[no->getID()] = 0; // Inicializa como não dominado
+        ehDominadoQtd[no->getID()] = 0; // Inicializa como não dominado
+    }
+
+    cout << "Lista de nós ordenada por grau (do maior para o menor):" << endl;
+    for(No* no : grafo->lista_adj) {
+        cout << no->getID() << " (Grau: " << no->getGrau() << ")" << endl;
     }
 
     while(!pq.empty()){
@@ -33,18 +38,18 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
             continue;
         
         No* noAtual = grafo->getNo(idNo);
-        bool deveAdicionar = false;
-
+        
+        bool deveAdicionar = ehDominadoQtd[idNo] < 2; // Verifica se o nó deve ser adicionado ao conjunto dominante
         for(Aresta* n : noAtual->arestas){
             char idAlvo = n->getIDalvo();
-            if(ehDominadoPor[idAlvo] < 2){
-                ehDominadoPor[idAlvo]++;
+            if(ehDominadoQtd[idAlvo] < 2){
+                ehDominadoQtd[idAlvo]++;
                 deveAdicionar = true;
             }
         }
         if(deveAdicionar){
             dominatingSet.push_back(idNo);
-            ehDominadoPor[idNo]++; // O próprio nó também é dominado
+            ehDominadoQtd[idNo]++; // O próprio nó também é dominado
         }
     }
     return dominatingSet;
