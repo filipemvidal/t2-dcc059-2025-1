@@ -315,15 +315,14 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
 int TwoDominatingSet::pegarAlpha(meuAlpha alphas[], int quantidade){
     float random = (float)rand() / RAND_MAX; // Gera um número entre 0 e 1
     float soma = 0.0f;
-    for(int i = 0; i < quantidade; i++){
+    int i = 0;
+    for(; i < quantidade; i++){
         soma += alphas[i].probabilidade;
         if(random <= soma){
             return i;
         }
     }
-    // Caso não encontre (deve encontrar, mas por segurança)
-    cout << "Erro: função pegarAlpha não encontrou um alpha. Soma=" << soma << ", random=" << random << endl;
-    return 0;
+    return i - 1; // Retorna o último índice se não encontrou (caso raro)
 }
 
 void TwoDominatingSet::atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelhorSolucao, int quantidade, int tamanhoGrafo){
