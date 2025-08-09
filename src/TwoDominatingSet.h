@@ -30,7 +30,7 @@ class TwoDominatingSet
         vector<char> Guloso(Grafo* grafo);
         
         // Algoritmo 2: Guloso Randomizado Adaptativo
-        vector<char> GulosoRandomizadoAdaptativo(Grafo* grafo, float alpha);
+        vector<char> GulosoRandomizadoAdaptativo(Grafo* grafo, float alpha, int numIter = 1);
         
         // Algoritmo 3: Guloso Randomizado Adaptativo Reativo
         vector<char> GulosoRandomizadoAdaptativoReativo(Grafo* grafo, float alpha[], int tamAlpha, int numIter, int bloco);
@@ -43,6 +43,8 @@ class TwoDominatingSet
         bool estaDominado(char id, const vector<char>& conjuntoDominante, Grafo* grafo);
         void atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelhorSolucao, int quantidade, int tamanhoGrafo);
         int pegarAlpha(meuAlpha alphas[], int quantidade);
+
+        vector<char> auxGulosoRandomizadoAdaptativo(Grafo* grafo, float alpha);
 };
 
 #endif

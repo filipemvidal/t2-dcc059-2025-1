@@ -24,11 +24,6 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
         ehDominadoQtd[no->getID()] = 0; // Inicializa como não dominado
     }
 
-    cout << "Lista de nós ordenada por grau (do maior para o menor):" << endl;
-    for(No* no : grafo->lista_adj) {
-        cout << no->getID() << " (Grau: " << no->getGrau() << ")" << endl;
-    }
-
     while(!pq.empty()){
         char idNo = pq.top().second;
         pq.pop();
@@ -110,29 +105,86 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     return dominatingSet;
 }
 
+vector<char> TwoDominatingSet::auxGulosoRandomizadoAdaptativo(Grafo* grafo, float alpha){
+    vector<char> dominatingSet;
+    map<char, int> ehDominadoQtd;
+    vector<pair<int, char>> pq;
 
+    for(No* no : grafo->lista_adj){
+        // O nó é melhor se tiver mais arestas, ou seja, ordem - grau é o critério de ordenação
+        pq.push_back({(grafo->ordem - no->getGrau()), no->getID()});
+        ehDominadoQtd[no->getID()] = 0; // Inicializa como não dominado
+    }
+    
+    // Ordena a prioridade dos nós: Esse sort pega a first e compara, se for igual, pega a second
+    while(!pq.empty()){
+        sort(pq.begin(), pq.end());
+        // Pega o elemento de acordo com o alfa
+        
+        // Calcula o índice de acordo com o alpha, mas garantindo que não seja menor que 1
+        int maiorIndex = max(1, (int)(pq.size() * alpha));
+        maiorIndex = min(maiorIndex, (int)pq.size()); 
 
-vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float alpha) {
+        int index = rand() % maiorIndex;
+        char idNo = pq[index].second;
+        pq.erase(pq.begin() + index); // Remove o nó escolhido da lista
+
+        // Se o nó já está no conjunto dominante, pula
+        if(find(dominatingSet.begin(), dominatingSet.end(), idNo) != dominatingSet.end())
+            continue;
+        
+        No* noAtual = grafo->getNo(idNo);
+        
+        bool deveAdicionar = ehDominadoQtd[idNo] < 2; // Verifica se o nó deve ser adicionado ao conjunto dominante
+        for(Aresta* n : noAtual->arestas){
+            char idAlvo = n->getIDalvo();
+            if(ehDominadoQtd[idAlvo] < 2){
+                ehDominadoQtd[idAlvo]++;
+                deveAdicionar = true;
+            }
+        }
+        if(deveAdicionar){
+            dominatingSet.push_back(idNo);
+            ehDominadoQtd[idNo]++; // O próprio nó também é dominado
+        }
+    }
+
+    return dominatingSet;
+}
+
+vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float alpha, int numIter) {
+    vector<char> melhorSolucao = auxGulosoRandomizadoAdaptativo(grafo, alpha);
+
+    for(int i = 1; i < numIter; i++) {
+        vector<char> solucaoAtual = auxGulosoRandomizadoAdaptativo(grafo, alpha);
+        
+        // Se a solução atual é melhor, atualiza a melhor solução
+        if(solucaoAtual.size() < melhorSolucao.size()) {
+            melhorSolucao = solucaoAtual;
+        }
+    }
+    return melhorSolucao;
+    /*
     vector<char> conjuntoDominante; // Conjunto solução
     vector<char> naoDominados;  // Nós não dominados
-
+    
     // Inicializa 
     for(No* no : grafo->lista_adj){
         naoDominados.push_back(no->getID());
     }
-
+    
     while(!naoDominados.empty()){
         vector<pair<char, int>> candidatos; // Lista de candidatos com suas contribuições
         int melhorContribuicao = -1;
-
+        
         // Avalia cada nó candidato
         for(No* candidato : grafo->lista_adj){
             char idCandidato = candidato->getID();
-
+            
             // Ignora nós já no conjunto solução
             if(find(conjuntoDominante.begin(), conjuntoDominante.end(), idCandidato) != conjuntoDominante.end())
-                continue;
-
+            continue;
+            
             int contribuicao = 0;
             // Calcula quantos não dominados seriam cobertos por este candidato
             for(char alvo : naoDominados){
@@ -142,7 +194,7 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float a
                     contribuicao++;
                 }
             }
-
+            
             // Só considera candidatos com contribuição positiva
             if(contribuicao > 0) {
                 candidatos.push_back(make_pair(idCandidato, contribuicao));
@@ -152,21 +204,21 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float a
                 }
             }
         }
-
+        
         // Se não há candidatos, sai do loop
         if(candidatos.empty()) 
-            break;
-
+        break;
+        
         // Construir a Lista Restrita de Candidatos
         vector<char> ListaCandidatos;
         float limite = melhorContribuicao - alpha * melhorContribuicao;
-
+        
         for(auto& par : candidatos) {
             if(par.second >= limite) {
                 ListaCandidatos.push_back(par.first);
             }
         }
-
+        
         // Seleciona aleatoriamente um nó da ListaCandidatos
         char noEscolhido;
         if(!ListaCandidatos.empty()) {
@@ -175,15 +227,15 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float a
         } else {
             // Fallback: escolhe o candidato com a maior contribuição
             auto melhorCandidato = max_element(candidatos.begin(), candidatos.end(), 
-                [](const pair<char, int>& a, const pair<char, int>& b) {
-                    return a.second < b.second;
-                });
+            [](const pair<char, int>& a, const pair<char, int>& b) {
+                return a.second < b.second;
+            });
             noEscolhido = melhorCandidato->first;
         }
-
+        
         // Adiciona o nó escolhido ao conjunto solução
         conjuntoDominante.push_back(noEscolhido);
-
+        
         // Atualiza a lista de não dominados
         vector<char> novosNaoDominados;
         for(char alvo : naoDominados) {
@@ -193,11 +245,10 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float a
         }
         naoDominados = novosNaoDominados;
     }
-
+    
     return conjuntoDominante;
+    */
 }
-
-
 
 vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, float vetAlphas[], int tamAlpha, int numIter, int bloco) {
     vector<char> melhorSolucao;
@@ -295,9 +346,7 @@ void TwoDominatingSet::atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelh
 
 bool TwoDominatingSet::estaDominado(char id, const vector<char>& conjuntoDominante, Grafo* grafo) {
     int cont = 0;
-    cout << "Esta Dominado" << endl;
     for (char idDominador : conjuntoDominante) {
-        cout << "Testando com " << idDominador << endl;
         if(grafo->getNo(idDominador)->isAdjacent(id)) {
             cont++;
         }
