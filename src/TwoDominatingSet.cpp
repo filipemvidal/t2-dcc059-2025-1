@@ -10,12 +10,28 @@ TwoDominatingSet::~TwoDominatingSet()
     // Destrutor vazio
 }
 
+void debugPrint(vector<char> &DS, map<char, int> QD, 
+    priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq) {
+    cout << "\nQD : {";
+    for(auto &pair : QD) {
+        cout << "(" << pair.first << "," << pair.second << "),";
+    }
+    cout << "\nPQ : {";
+    while (!pq.empty()) {
+        auto elem = pq.top();
+        cout << "(" << elem.first << "," << elem.second << "),";
+        pq.pop();
+    }
+    cout << "\nDS : {";
+    for(auto it : DS) {
+        cout << it << ",";
+    }
+}
 
 vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {    
     vector<char> dominatingSet;
     map<char, int> ehDominadoQtd;
     priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq;
-
     // Ordena os nós por grau (nós com mais arestas primeiro)
     for(No* no : grafo->lista_adj){
         // O nó é melhor se tiver mais arestas, ou seja, ordem - grau é o critério de ordenação
@@ -23,6 +39,8 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
 
         ehDominadoQtd[no->getID()] = 0; // Inicializa como não dominado
     }
+
+    debugPrint(dominatingSet, ehDominadoQtd, pq);
 
     while(!pq.empty()){
         char idNo = pq.top().second;
@@ -35,16 +53,18 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
         No* noAtual = grafo->getNo(idNo);
         
         bool deveAdicionar = ehDominadoQtd[idNo] < 2; // Verifica se o nó deve ser adicionado ao conjunto dominante
-        for(Aresta* n : noAtual->arestas){
-            char idAlvo = n->getIDalvo();
-            if(ehDominadoQtd[idAlvo] < 2){
-                ehDominadoQtd[idAlvo]++;
-                deveAdicionar = true;
+        //if(!deveAdicionar){
+            for(Aresta* n : noAtual->arestas){
+                char idAlvo = n->getIDalvo();
+                if(ehDominadoQtd[idAlvo] < 2){
+                    ehDominadoQtd[idAlvo]++;
+                    deveAdicionar = true;
+                }
             }
-        }
+        //}
         if(deveAdicionar){
             dominatingSet.push_back(idNo);
-            ehDominadoQtd[idNo]++; // O próprio nó também é dominado
+            ehDominadoQtd[idNo] += 2; // O próprio nó também é dominado
         }
     }
     return dominatingSet;
