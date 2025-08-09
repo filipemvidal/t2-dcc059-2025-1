@@ -118,35 +118,46 @@ vector<char> TwoDominatingSet::auxGulosoRandomizadoAdaptativo(Grafo* grafo, floa
     
     // Ordena a prioridade dos nós: Esse sort pega a first e compara, se for igual, pega a second
     while(!pq.empty()){
+        // Ordena a lista de prioridades
         sort(pq.begin(), pq.end());
-        // Pega o elemento de acordo com o alfa
         
         // Calcula o índice de acordo com o alpha, mas garantindo que não seja menor que 1
         int maiorIndex = max(1, (int)(pq.size() * alpha));
         maiorIndex = min(maiorIndex, (int)pq.size()); 
-
         int index = rand() % maiorIndex;
-        char idNo = pq[index].second;
-        pq.erase(pq.begin() + index); // Remove o nó escolhido da lista
 
-        // Se o nó já está no conjunto dominante, pula
-        if(find(dominatingSet.begin(), dominatingSet.end(), idNo) != dominatingSet.end())
-            continue;
-        
+        char idNo = pq[index].second;
+        pq.erase(pq.begin() + index); // Remove o nó escolhido da lista de prioridades
+
         No* noAtual = grafo->getNo(idNo);
-        
-        bool deveAdicionar = ehDominadoQtd[idNo] < 2; // Verifica se o nó deve ser adicionado ao conjunto dominante
+        bool deveAdicionar = ehDominadoQtd[idNo] < 2; // Verifica se o nó deve ser adicionado ao conjunto dominante inicialmente
         for(Aresta* n : noAtual->arestas){
             char idAlvo = n->getIDalvo();
             if(ehDominadoQtd[idAlvo] < 2){
-                ehDominadoQtd[idAlvo]++;
+                ehDominadoQtd[idAlvo]++; // Aqui eu posso já aumentar, já que ele será adicionado aqui
                 deveAdicionar = true;
             }
         }
+        // Se deve adicionar, adiciona ao conjunto dominante
         if(deveAdicionar){
             dominatingSet.push_back(idNo);
             ehDominadoQtd[idNo]++; // O próprio nó também é dominado
         }
+
+        // Atualiza as prioridades dos nós restantes na lista
+        for(auto it = pq.begin(); it != pq.end(); ++it){
+            char idAtual = it->second;
+            No* n = grafo->getNo(idAtual);
+            int contribuicao = 0;
+            for(Aresta* a : n->arestas){
+                char idAlvo = a->getIDalvo();
+                if(ehDominadoQtd[idAlvo] < 2){
+                    contribuicao++;
+                }
+            }
+            it->first = grafo->ordem - contribuicao; // Atualiza a prioridade
+        }
+
     }
 
     return dominatingSet;
@@ -308,8 +319,6 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
     delete[] alphas;
     return melhorSolucao;
 }
-
-
 
 // FUNÇÕES AUXILIARES
 int TwoDominatingSet::pegarAlpha(meuAlpha alphas[], int quantidade){
