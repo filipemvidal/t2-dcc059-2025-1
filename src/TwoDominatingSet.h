@@ -9,6 +9,7 @@
 #include <ctime>
 #include <algorithm> // Para max_element, find, etc.
 #include <iostream>  // Para cout
+#include <queue>
 
 using namespace std;
 
@@ -42,9 +43,6 @@ class TwoDominatingSet
         bool estaDominado(char id, const vector<char>& conjuntoDominante, Grafo* grafo);
         void atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelhorSolucao, int quantidade, int tamanhoGrafo);
         int pegarAlpha(meuAlpha alphas[], int quantidade);
-        
-        // Função de verificação de adjacência
-        bool ehAdjacente(No* no, char id);
 };
 
 #endif
