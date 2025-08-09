@@ -16,10 +16,10 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     map<char, int> ehDominadoQtd;
     priority_queue<pair<int, char>, vector<pair<int, char>>, greater<pair<int, char>>> pq;
 
-
     // Ordena os nós por grau (nós com mais arestas primeiro)
     for(No* no : grafo->lista_adj){
-        pq.push({no->getGrau(), no->getID()});
+        // O nó é melhor se tiver mais arestas, ou seja, ordem - grau é o critério de ordenação
+        pq.push({(grafo->ordem - no->getGrau()), no->getID()});
 
         ehDominadoQtd[no->getID()] = 0; // Inicializa como não dominado
     }
