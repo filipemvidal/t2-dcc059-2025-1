@@ -468,8 +468,13 @@ void Gerenciador::comandos2(Grafo* grafo) {
             }
             case 'b': {
                 cout << "Algoritmo guloso adaptativo selecionado." << endl;
+
+                cout << "Digite o valor desejado de alfa:";
+                float alfa = 0.5;
+                cin >> alfa;
+
                 TwoDominatingSet *tds = new TwoDominatingSet();
-                vector<char> resultado = tds->GulosoAdaptativo(grafo);
+                vector<char> resultado = tds->GulosoRandomizadoAdaptativo(grafo, alfa);
                 delete tds;
                 
                 if (resultado.empty()) {
@@ -490,9 +495,25 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 break;
             }
             case 'c': {
-                cout << "Algoritmo guloso adaptativo reativo selecionado." << endl;
+                cout << "Algoritmo guloso randomizado adaptativo reativo selecionado." << endl;
+
+                int tam, nIter, bloco;
+                cout << "Diga com quantos alfas deseja testar: ";
+                cin >> tam;
+                float* alfas = new float[tam];
+                cout << "Digite os seus alfas: " << endl;
+                for(int i = 0; i < tam; i++){
+                    cout << "Alfa " << (i + 1) << ": ";
+                    cin >> alfas[i];
+                }
+                cout << "Com quantas iterações? ";
+                cin >> nIter;
+                cout << "Qual o tamanho do bloco? ";
+                cin >> bloco;
+                
+
                 TwoDominatingSet *tds = new TwoDominatingSet();
-                vector<char> resultado = tds->GulosoAdaptativoReativo(grafo);
+                vector<char> resultado = tds->GulosoRandomizadoAdaptativoReativo(grafo, alfas, tam, nIter, bloco);
                 delete tds;
                 
                 if (resultado.empty()) {
@@ -538,13 +559,14 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 }
                 cin.ignore(); // Limpa o buffer de entrada
 
-                delete tds;
-
-                if (tds->isValidDominatingSet(idsDominantes, grafo)) {
+                
+                if (tds->conjuntoDominanteValido(idsDominantes, grafo)) {
                     cout << "O conjunto dominante é válido." << endl;
                 } else {
                     cout << "O conjunto dominante não é válido." << endl;
                 }
+
+                delete tds;
                 break;
             }
             case '0': {
