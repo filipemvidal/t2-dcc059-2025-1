@@ -37,7 +37,7 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
             for(char alvo : naoDominados){
                 vector<char> conjuntoProvisorio = dominatingSet;
                 conjuntoProvisorio.push_back(idCandidato);
-                if(isDominated(alvo, conjuntoProvisorio, grafo)){
+                if(estaDominado(alvo, conjuntoProvisorio, grafo)){
                     contribuicao++;
                 }
             }
@@ -50,19 +50,19 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
         }
 
         // Adiciona o vértice escolhido ao conjunto dominante
-        conjuntoDominante.push_back(melhorNo);
+        dominatingSet.push_back(melhorNo);
 
         // Atualiza a lista de não dominados
         vector<char> novosNaoDominados;
         for(char alvo : naoDominados){
-            if(!estaDominado(alvo, conjuntoDominante, grafo)){
+            if(!estaDominado(alvo, dominatingSet, grafo)){
                 novosNaoDominados.push_back(alvo);
             }
         }
         naoDominados = novosNaoDominados;
     }
 
-    return conjuntoDominante;
+    return dominatingSet;
 }
 
 
@@ -93,7 +93,7 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativo(Grafo* grafo, float a
             for(char alvo : naoDominados){
                 vector<char> conjuntoProvisorio = conjuntoDominante;
                 conjuntoProvisorio.push_back(idCandidato);
-                if(isDominated(alvo, conjuntoProvisorio, grafo)){
+                if(estaDominado(alvo, conjuntoProvisorio, grafo)){
                     contribuicao++;
                 }
             }
@@ -158,8 +158,6 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
     vector<char> melhorSolucao;
     meuAlpha* alphas = new meuAlpha[tamAlpha];
     
-    // Antes: Inicialização simplificada sem contador
-    // Agora: Inicialização completa de todas as variáveis
     for (int i = 0; i < tamAlpha; i++) {
         alphas[i].alpha = vetAlphas[i];
         alphas[i].probabilidade = 1.0f / tamAlpha; // Probabilidade inicial uniforme
@@ -171,7 +169,6 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
     for (int i = 0; i < tamAlpha; i++) {
         vector<char> solucaoAtual = GulosoRandomizadoAdaptativo(grafo, alphas[i].alpha);
         
-        // Agora: Tem mais tratamento pra soluçoes inválidas
         if (conjuntoDominanteValido(solucaoAtual, grafo)) {
             // Se a solução é válida, armazena o tamanho dela como média
             alphas[i].media = solucaoAtual.size();
@@ -181,18 +178,6 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
             alphas[i].media = grafo->ordem; 
             cout << "Solução inválida com alpha=" << alphas[i].alpha << ". Atribuído valor de penalização." << endl;
         }
-
-        /* 
-
-        Isso aqui apareceu apontado pelo COPILOT, vale a pena verificar:
-        
-        Se usássemos media_alpha = 0.0f para soluções inválidas:
-        - Q[i] = (tamGrafo - melhorSolucao) / 0.0f iria gerar divisão por zero
-        
-        grafo->ordem (número de vértices) como penalização:
-        - valor alto o suficiente para reduzir significativamente Q[i]
-        - Alphas ruins continuam tendo menor probabilidade
-        */
 
         if (melhorSolucao.empty() || solucaoAtual.size() < melhorSolucao.size()) {
             melhorSolucao = solucaoAtual;
@@ -266,7 +251,7 @@ void TwoDominatingSet::atualizaProbabilidades(meuAlpha alphas[], int tamanhoMelh
 bool TwoDominatingSet::estaDominado(char id, const vector<char>& conjuntoDominante, Grafo* grafo) {
     int cont = 0;
     for (char idDominador : conjuntoDominante) {    
-        if(grafo->getNo(idDominador)->ehAdjacente(id)) {
+        if(grafo->getNo(idDominador)->isAdjacent(id)) {
             cont++;
         }
     }

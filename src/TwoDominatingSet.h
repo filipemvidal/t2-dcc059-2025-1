@@ -29,10 +29,10 @@ class TwoDominatingSet
         vector<char> Guloso(Grafo* grafo);
         
         // Algoritmo 2: Guloso Randomizado Adaptativo
-        vector<char> GulosoAdaptativo(Grafo* grafo, float alpha);
+        vector<char> GulosoRandomizadoAdaptativo(Grafo* grafo, float alpha);
         
         // Algoritmo 3: Guloso Randomizado Adaptativo Reativo
-        vector<char> GulosoAdaptativoReativo(Grafo* grafo, float alpha[], int tamAlpha, int numIter, int bloco);
+        vector<char> GulosoRandomizadoAdaptativoReativo(Grafo* grafo, float alpha[], int tamAlpha, int numIter, int bloco);
 
         // Função de validação
         bool conjuntoDominanteValido(const vector<char>& conjuntoDominante, Grafo* grafo);
