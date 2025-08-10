@@ -159,15 +159,14 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
         if (conjuntoDominanteValido(solucaoAtual, grafo)) {
             // Se a solução é válida, armazena o tamanho dela como média
             alphas[i].media = solucaoAtual.size();
+            if (melhorSolucao.empty() || solucaoAtual.size() < melhorSolucao.size()) {
+                melhorSolucao = solucaoAtual;
+            }
         } else {
             // Penalização: atribui um valor alto (ordem do grafo) para alphas que geram soluções inválidas
             // Isso evita divisão por zero e penaliza alphas ruins
-            alphas[i].media = grafo->ordem; 
+            alphas[i].media = grafo->ordem;
             cout << "Solução inválida com alpha=" << alphas[i].alpha << ". Atribuído valor de penalização." << endl;
-        }
-
-        if (melhorSolucao.empty() || solucaoAtual.size() < melhorSolucao.size()) {
-            melhorSolucao = solucaoAtual;
         }
     }
 
