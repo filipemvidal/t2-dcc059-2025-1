@@ -25,6 +25,7 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     
     while(!pq.empty()){
         sort(pq.begin(), pq.end()); // Ordena a lista de prioridades
+        cout << endl;
 
         char idNo = pq[0].second;
         pq.erase(pq.begin()); 
@@ -185,9 +186,7 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
         vector<char> solAtual = GulosoRandomizadoAdaptativo(grafo, alphaAtual.alpha);
 
         // Antes: Atualização simples da média
-        // Agora: Média móvel ponderada usando contador
-        alphaAtual.media = (alphaAtual.media * alphaAtual.contador + solAtual.size()) / (alphaAtual.contador + 1);
-        alphaAtual.contador++; // Incrementa o contador para a próxima iteração
+        alphaAtual.media = (alphaAtual.media + solAtual.size())/(++alphaAtual.contador);
 
         // Atualiza a melhor solução global
         if(melhorSolucao.empty() || solAtual.size() < melhorSolucao.size()) {

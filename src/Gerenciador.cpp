@@ -460,6 +460,7 @@ void Gerenciador::comandos2(Grafo* grafo) {
                     cout << id << " ";
                 }
                 cout << endl;
+                cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
                 if (pergunta_imprimir_arquivo("resultado_guloso.txt")) {
                     imprimeVetorNoArquivo("resultado_guloso.txt", resultado);
@@ -488,6 +489,7 @@ void Gerenciador::comandos2(Grafo* grafo) {
                     cout << id << " ";
                 }
                 cout << endl;
+                cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
                 if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo.txt")) {
                     imprimeVetorNoArquivo("resultado_guloso_adaptativo.txt", resultado);
@@ -527,6 +529,7 @@ void Gerenciador::comandos2(Grafo* grafo) {
                     cout << id << " ";
                 }
                 cout << endl;
+                cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
                 if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo_reativo.txt")) {
                     imprimeVetorNoArquivo("resultado_guloso_adaptativo_reativo.txt", resultado);
