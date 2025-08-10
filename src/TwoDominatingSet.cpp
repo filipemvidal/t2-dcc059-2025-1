@@ -25,7 +25,6 @@ vector<char> TwoDominatingSet::Guloso(Grafo* grafo) {
     
     while(!pq.empty()){
         sort(pq.begin(), pq.end()); // Ordena a lista de prioridades
-        cout << endl;
 
         char idNo = pq[0].second;
         pq.erase(pq.begin()); 
