@@ -581,4 +581,74 @@ void Gerenciador::comandos2(Grafo* grafo) {
             }
         }
     }while(running);
+
+void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFile) {
+    std::ofstream out(outputFile, std::ios::app);
+    TwoDominatingSet tds;
+    const int NUM_EXEC = 10;
+    const int NUM_ITER_RANDOM = 30;
+    const int NUM_ITER_REATIVO = 300;
+    const int BLOCO = 30;
+    float alfas[] = {0.2f, 0.3f, 0.4f};
+
+    if (out.tellp() == 0) {
+        out << "Instancia;Algoritmo;MelhorSolucao;MediaSolucoes;TempoMedio\n";
+    }
+
+    // Algoritmo Guloso
+    {
+        double tempoTotal = 0;
+        std::vector<int> solucoes;
+        
+        for (int i = 0; i < NUM_EXEC; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            auto sol = tds.Guloso(grafo);
+            auto end = std::chrono::high_resolution_clock::now();
+            tempoTotal += std::chrono::duration<double>(end - start).count();
+            solucoes.push_back(sol.size());
+        }
+        
+        int melhor = *std::min_element(solucoes.begin(), solucoes.end());
+        double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
+        out << grafo->nome << ";Guloso;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+    }
+
+    // Algoritmo Randomizado
+    for (float alfa : alfas) {
+        double tempoTotal = 0;
+        std::vector<int> solucoes;
+        
+        for (int i = 0; i < NUM_EXEC; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            auto sol = tds.GulosoRandomizadoAdaptativo(grafo, alfa, NUM_ITER_RANDOM);
+            auto end = std::chrono::high_resolution_clock::now();
+            tempoTotal += std::chrono::duration<double>(end - start).count();
+            solucoes.push_back(sol.size());
+        }
+        
+        int melhor = *std::min_element(solucoes.begin(), solucoes.end());
+        double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
+        out << grafo->nome << ";Randomizado_" << alfa << ";" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+    }
+
+    // Algoritmo Reativo
+    {
+        double tempoTotal = 0;
+        std::vector<int> solucoes;
+        
+        for (int i = 0; i < NUM_EXEC; i++) {
+            auto start = std::chrono::high_resolution_clock::now();
+            auto sol = tds.GulosoRandomizadoAdaptativoReativo(grafo, alfas, 3, NUM_ITER_REATIVO, BLOCO);
+            auto end = std::chrono::high_resolution_clock::now();
+            tempoTotal += std::chrono::duration<double>(end - start).count();
+            solucoes.push_back(sol.size());
+        }
+        
+        int melhor = *std::min_element(solucoes.begin(), solucoes.end());
+        double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
+        out << grafo->nome << ";Reativo;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+    }
+    
+    out.close();
+    }
 }
