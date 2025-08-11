@@ -438,7 +438,6 @@ void Gerenciador::comandos2(Grafo* grafo) {
         cout << "(a) Algoritmo guloso" << endl;
         cout << "(b) Algoritmo guloso adaptativo" << endl;
         cout << "(c) Algoritmo guloso adaptativo reativo" << endl;
-        cout << "(d) Verificar se um conjunto é um 2-dominating set válido válido" << endl;
         cout << "(0) Sair" << endl << endl;
         char resp;
         cin >> resp;
@@ -534,42 +533,6 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo_reativo.txt")) {
                     imprimeVetorNoArquivo("resultado_guloso_adaptativo_reativo.txt", resultado);
                 }
-                break;
-            }
-            case 'd':{
-                TwoDominatingSet *tds = new TwoDominatingSet();
-
-                cout << "Digite o tamanho do conjunto dominante: ";
-                int tamanho;
-                cin >> tamanho;
-                if (tamanho <= 0 || tamanho > grafo->ordem) {
-                    cout << "Tamanho inválido. Deve ser entre 1 e " << grafo->ordem << "." << endl;
-                    delete tds;
-                    break;
-                }
-
-                cout << "Digite os IDs dos nós do conjunto dominante (separados por espaço): ";
-                vector<char> idsDominantes;
-                for (int i = 0; i < tamanho; ++i) {
-                    char id;
-                    cin >> id;
-                    if (find(idsDominantes.begin(), idsDominantes.end(), id) != idsDominantes.end()) {
-                        cout << "ID " << id << " já foi inserido. Por favor, insira um ID único." << endl;
-                        --i; // Decrementa para repetir a entrada
-                    } else {
-                        idsDominantes.push_back(id);
-                    }
-                }
-                cin.ignore(); // Limpa o buffer de entrada
-
-                
-                if (tds->conjuntoDominanteValido(idsDominantes, grafo)) {
-                    cout << "O conjunto dominante é válido." << endl;
-                } else {
-                    cout << "O conjunto dominante não é válido." << endl;
-                }
-
-                delete tds;
                 break;
             }
             case '0': {

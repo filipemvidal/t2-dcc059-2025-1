@@ -186,7 +186,7 @@ vector<char> TwoDominatingSet::GulosoRandomizadoAdaptativoReativo(Grafo* grafo, 
 
         // Antes: Atualização simples da média
         alphaAtual.media = (alphaAtual.media + solAtual.size())/(++alphaAtual.contador);
-
+ 
         // Atualiza a melhor solução global
         if(melhorSolucao.empty() || solAtual.size() < melhorSolucao.size()) {
             melhorSolucao = solAtual;
