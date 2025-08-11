@@ -581,6 +581,8 @@ void Gerenciador::comandos2(Grafo* grafo) {
             }
         }
     }while(running);
+} 
+
 
 void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFile) {
     std::ofstream out(outputFile, std::ios::app);
@@ -590,6 +592,10 @@ void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFil
     const int NUM_ITER_REATIVO = 300;
     const int BLOCO = 30;
     float alfas[] = {0.2f, 0.3f, 0.4f};
+
+    // Extrai o nome do arquivo do caminho completo
+    size_t lastSlash = outputFile.find_last_of("/\\");
+    std::string fileName = outputFile.substr(lastSlash + 1);
 
     if (out.tellp() == 0) {
         out << "Instancia;Algoritmo;MelhorSolucao;MediaSolucoes;TempoMedio\n";
@@ -610,7 +616,7 @@ void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFil
         
         int melhor = *std::min_element(solucoes.begin(), solucoes.end());
         double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
-        out << grafo->nome << ";Guloso;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+        out << fileName << ";Guloso;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
     }
 
     // Algoritmo Randomizado
@@ -628,7 +634,7 @@ void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFil
         
         int melhor = *std::min_element(solucoes.begin(), solucoes.end());
         double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
-        out << grafo->nome << ";Randomizado_" << alfa << ";" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+        out << fileName << ";Randomizado_" << alfa << ";" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
     }
 
     // Algoritmo Reativo
@@ -646,9 +652,8 @@ void Gerenciador::comandos2Automatico(Grafo* grafo, const std::string& outputFil
         
         int melhor = *std::min_element(solucoes.begin(), solucoes.end());
         double media = std::accumulate(solucoes.begin(), solucoes.end(), 0.0) / NUM_EXEC;
-        out << grafo->nome << ";Reativo;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
+        out << fileName << ";Reativo;" << melhor << ";" << media << ";" << tempoTotal/NUM_EXEC << "\n";
     }
     
     out.close();
-    }
 }
