@@ -435,9 +435,9 @@ void Gerenciador::comandos2(Grafo* grafo) {
     {
         cout << "\nOs algoritmos a seguir resolvem o problema de 2-dominating set." << endl;
         cout << "Digite uma das opcoes abaixo e pressione enter:" << endl << endl;
-        cout << "(a) Algoritmo guloso" << endl;
-        cout << "(b) Algoritmo guloso adaptativo" << endl;
-        cout << "(c) Algoritmo guloso adaptativo reativo" << endl;
+        cout << "(a) Algoritmo guloso adaptativo" << endl;
+        cout << "(b) Algoritmo guloso randomizado adaptativo" << endl;
+        cout << "(c) Algoritmo guloso randomizado adaptativo reativo" << endl;
         cout << "(0) Sair" << endl << endl;
         char resp;
         cin >> resp;
@@ -461,8 +461,8 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 cout << endl;
                 cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
-                if (pergunta_imprimir_arquivo("resultado_guloso.txt")) {
-                    imprimeVetorNoArquivo("resultado_guloso.txt", resultado);
+                if (pergunta_imprimir_arquivo("resultado_guloso_adptativo.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso_adptativo.txt", resultado);
                 }
                 break;
             }
@@ -490,8 +490,8 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 cout << endl;
                 cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
-                if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo.txt")) {
-                    imprimeVetorNoArquivo("resultado_guloso_adaptativo.txt", resultado);
+                if (pergunta_imprimir_arquivo("resultado_guloso_randomizado_adaptativo.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso_randomizado_adaptativo.txt", resultado);
                 }
                 break;
             }
@@ -530,8 +530,8 @@ void Gerenciador::comandos2(Grafo* grafo) {
                 cout << endl;
                 cout << "Tamanho do conjunto dominante: " << resultado.size() << endl;
                 
-                if (pergunta_imprimir_arquivo("resultado_guloso_adaptativo_reativo.txt")) {
-                    imprimeVetorNoArquivo("resultado_guloso_adaptativo_reativo.txt", resultado);
+                if (pergunta_imprimir_arquivo("resultado_guloso_randomizado_adaptativo_reativo.txt")) {
+                    imprimeVetorNoArquivo("resultado_guloso_randomizado_adaptativo_reativo.txt", resultado);
                 }
                 break;
             }
